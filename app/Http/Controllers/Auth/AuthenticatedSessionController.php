@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\RolesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -33,7 +34,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $route = match ($request->user()->hasRole(RolesEnum::ADMIN->value)) {
+            true => route('admin.dashboard', absolute: false),
+            default => route('home', absolute: false)
+        };
+
+        return redirect()->intended($route);
     }
 
     /**

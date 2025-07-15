@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Enums\RolesEnum;
+use App\Models\Users\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +16,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $permissions = RolesEnum::permissions();
+
+        foreach ($permissions as $role => $permissionsList) {
+            foreach ($permissionsList as $permission) {
+                Permission::create(['name' => $permission]);
+            }
+        }
+
+        foreach (RolesEnum::cases() as $case) {
+            $role = Role::create(['name' => $case->value]);
+
+            foreach ($permissions[$role] as $permission) {
+                $role->givePermissionTo($permission);
+            }
+        }
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+            'name' => 'admin',
+            'email' => 'admin@kht.com',
+        ])->assignRole(RolesEnum::ADMIN->value);
     }
 }
