@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const can = computed<any>(() => usePage().props.can)
 </script>
 
 <template>
@@ -57,7 +59,7 @@ const showingNavigationDropdown = ref(false);
                                         </NavLink>       
                                     </template>
                                     
-                                    <template v-if="$page.props.can.see_favorites">
+                                    <template v-if="can.see_favorites">
                                         <NavLink
                                             :href="route('favorites.index')"
                                             :active="route().current('favorites.index')"

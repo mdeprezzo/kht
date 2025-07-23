@@ -26,7 +26,7 @@
                           @change="changePage" 
                       >
                           <template #role="{ item }">
-                            {{ item.roles[0]?.name ?? '---' }}
+                            {{ item.role ?? '---' }}
                           </template>
 
                           <template #actions="{ item }">
@@ -56,6 +56,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { Head, usePage, router } from '@inertiajs/vue3';
+import { PaginatedResponse } from '@/types/pagination';
+import { User } from '@/types/user';
+
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import BaseTable from '@/Components/BaseTable.vue';
@@ -65,10 +68,12 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import UserFormDialog from './UserFormDialog.vue';
 import UserDeleteFormDialog from './UserDeleteFormDialog.vue';
 
-const users = computed(() => usePage().props.users);
+const users = computed<PaginatedResponse<User>>(
+  () => usePage().props.users as PaginatedResponse<User>
+);
 
-const userDeleteFormDialog = ref(null)
-const userFormDialog = ref(null)
+const userDeleteFormDialog = ref<any |null>(null)
+const userFormDialog = ref<any |null>(null)
 const headers = ref([
   {
     label: 'ID',
@@ -88,7 +93,7 @@ const headers = ref([
   },    
 ]);
 
-const changePage = (page) => {
+const changePage = (page: string) => {
   router.visit(page)
 }
 

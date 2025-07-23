@@ -24,7 +24,7 @@
                         <template v-for="book in books.data" :key="book.id">
                             <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 w-full">
                                 <div>
-                                    <img class="rounded-t-lg h-80 w-full object-cover" :src="book.media[0].original_url" :alt="book.title" />
+                                    <img class="rounded-t-lg h-80 w-full object-cover" :src="book.cover" :alt="book.title" />
                                 </div>
                                 <div class="p-5 space-y-4">
                                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ book.title }}</h5>
@@ -59,6 +59,8 @@
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { useSearch } from '@/composables/useSearch'
+import { PaginatedResponse } from '@/types/pagination.d';
+import { Book } from '@/types/book.d';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -68,9 +70,11 @@ import TextInput from '@/Components/TextInput.vue';
 // search
 const { searchQuery } = useSearch()
 
-const books = computed(() => usePage().props.books);
+const books = computed<PaginatedResponse<Book>>(
+    () => usePage().props.books as PaginatedResponse<Book>
+);
 
-const changePage = (url) => {
+const changePage = (url: string) => {
     router.visit(url)
 }
 </script>

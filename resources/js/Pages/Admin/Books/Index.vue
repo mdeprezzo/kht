@@ -34,8 +34,8 @@
                           @change="changePage" 
                       >
                           <template #cover="{ item }">
-                            <template v-if="item.media.length > 0">
-                              <img :src="item.media[0].original_url" class="w-20 h-20 rounded-full shadow-md object-cover" :alt="item.title" />
+                            <template v-if="item.cover">
+                              <img :src="item.cover" class="w-20 h-20 rounded-full shadow-md object-cover" :alt="item.title" />
                             </template>
                           </template>
 
@@ -47,6 +47,7 @@
                                   />
 
                                   <TrashIcon 
+                                    @click="openBookDeleteFormDialog(item)"
                                     class="cursor-pointer hover:text-red-500 text-gray-700"
                                   />
                               </div>
@@ -58,6 +59,7 @@
       </div>
 
       <BookFormDialog ref="bookFormDialog" />
+      <BookDeleteFormDialog ref="bookDeleteFormDialog" />
   </AuthenticatedLayout>
 </template>
 
@@ -65,6 +67,8 @@
 import { computed, ref } from 'vue';
 import { Head, usePage, router } from '@inertiajs/vue3';
 import { useSearch } from '@/composables/useSearch'
+import { PaginatedResponse } from '@/types/pagination.d';
+import { Book } from '@/types/book.d';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import BaseTable from '@/Components/BaseTable.vue';
@@ -73,10 +77,14 @@ import TrashIcon from '@/Components/Icons/TrashIcon.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import BookFormDialog from './BookFormDialog.vue';
+import BookDeleteFormDialog from './BookDeleteFormDialog.vue'
 
-const books = computed(() => usePage().props.books);
+const books = computed<PaginatedResponse<Book>>(
+    () => usePage().props.books as PaginatedResponse<Book>
+);
 
-const bookFormDialog = ref(null)
+const bookDeleteFormDialog = ref<any | null>(null)
+const bookFormDialog = ref<any | null>(null)
 const headers = ref([
   {
     label: 'ID',
@@ -99,11 +107,15 @@ const headers = ref([
 // search
 const { searchQuery } = useSearch()
 
-const changePage = (page) => {
+const changePage = (page: string) => {
   router.visit(page)
 }
 
 const openUserFormDialog = (item = null) => {
   bookFormDialog.value.open(item)
+}
+
+const openBookDeleteFormDialog = (item = null) => {
+  bookDeleteFormDialog.value.open(item)
 }
 </script>

@@ -59,11 +59,11 @@
     </div>
 
     <!-- Pagination -->
-    <template v-if="paginationData?.total > props.paginatedItems.per_page">
+    <template v-if="paginationData?.meta.total > props.paginatedItems.meta.per_page">
       <div class="px-6 py-4 border-t border-white/[0.05]">
         <div class="flex items-center justify-between">
           <span class="block text-sm font-medium text-gray-400">
-            Pagina {{ paginatedItems.current_page }} di {{ paginatedItems.total }}
+            Pagina {{ paginatedItems.meta.current_page }} di {{ paginatedItems.meta.total }}
           </span>
           
           <Pagination
@@ -76,26 +76,30 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { cloneDeep, get } from 'lodash'
+import { PaginatedResponse } from '@/types/pagination';
+
 import Pagination from './Pagination.vue'
 
-const props = defineProps({
-  headers: Array,
-  paginatedItems: Object,
-  items: Array,
-  title: String,
-  actions: {
-    type: Boolean,
-    default: true
+const props = withDefaults(
+  defineProps<{
+    headers: any[];
+    paginatedItems: PaginatedResponse<any>;
+    items?: any[];
+    title?: string;
+    actions?: boolean;
+  }>(),
+  {
+    actions: true, // ✅ Default value
   }
-})
+);
 
 const emit = defineEmits(['change'])
 const innerLinks = computed(() => {
-  if (props.paginatedItems.links && props.paginatedItems.links.length > 2) {
-    const tmpLinks = cloneDeep(props.paginatedItems.links)
+  if (props.paginatedItems.links && props.paginatedItems.meta.links.length > 2) {
+    const tmpLinks = cloneDeep(props.paginatedItems.meta.links)
     tmpLinks.shift()
     tmpLinks.pop()
     return tmpLinks
@@ -108,7 +112,7 @@ const mappedItems = computed(() => props.paginatedItems?.data ?? props.items)
 
 const paginationData = computed(() => props.paginatedItems ?? { total: 0 })
 
-const goToPage = (page) => {
+const goToPage = (page: string) => {
   emit('change', page)
 }
 </script>

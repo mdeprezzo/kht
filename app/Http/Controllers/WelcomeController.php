@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Books\Book;
 use Illuminate\Http\Request;
+use App\Http\Resources\Books\BookCollection;
 
 class WelcomeController extends Controller
 {
@@ -18,7 +19,7 @@ class WelcomeController extends Controller
         return Inertia::render(
             component: 'Welcome',
             props: [
-                'books' => $books
+                'books' => new BookCollection($books)
             ]
         );
     }

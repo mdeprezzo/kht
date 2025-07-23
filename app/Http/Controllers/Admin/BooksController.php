@@ -7,6 +7,7 @@ use App\Models\Books\Book;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Books\BookRequest;
+use App\Http\Resources\Books\BookCollection;
 
 class BooksController extends Controller
 {
@@ -20,7 +21,7 @@ class BooksController extends Controller
         return Inertia::render(
             component: 'Admin/Books/Index', 
             props: [
-                'books' => $books
+                'books' => new BookCollection($books)
             ]
         );
     }

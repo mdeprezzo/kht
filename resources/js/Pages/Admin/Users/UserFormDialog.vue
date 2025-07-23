@@ -150,8 +150,8 @@
             :actions="false"
           >
             <template #cover="{ item }">
-              <template v-if="item.media.length > 0">
-                <img :src="item.media[0].original_url" class="w-20 h-20 rounded-full shadow-md object-cover" :alt="item.title" />
+              <template v-if="item.cover">
+                <img :src="item.cover" class="w-20 h-20 rounded-full shadow-md object-cover" :alt="item.title" />
               </template>
             </template>
           </BaseTable>
@@ -181,7 +181,9 @@ const roles = computed(() => usePage().props.roles);
 
 const searchQuery = ref('')
 const books = ref({
-  data: []
+  data: [],
+  meta: {},
+  links: {}
 })
 const currentTab = ref('data')
 const show = ref(false)

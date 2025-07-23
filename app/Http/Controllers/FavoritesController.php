@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Books\BookCollection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -21,7 +22,7 @@ class FavoritesController extends Controller
         return Inertia::render(
             component: 'Favorites/Index',
             props: [
-                'books' => $books
+                'books' => new BookCollection($books)
             ]
         );
     }

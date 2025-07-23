@@ -1,10 +1,10 @@
 <template>
     <!-- Pagination -->
-    <template v-if="paginationData?.total > paginationData.per_page">
+    <template v-if="paginationData?.meta.total > paginationData.meta.per_page">
       <div class="px-6 py-4 border-t border-white/[0.05]">
         <div class="flex items-center justify-between">
           <span class="block text-sm font-medium text-gray-400 sm:hidden">
-            Pagina {{ paginationData.current_page }} di {{ paginationData.total }}
+            Pagina {{ paginationData.meta.current_page }} di {{ paginationData.meta.total }}
           </span>
 
           <nav aria-label="Page navigation example">
@@ -12,7 +12,7 @@
               <li>
                 <button
                   @click="prevPage"
-                  :disabled="paginationData.current_page === 1"                
+                  :disabled="paginationData.meta.current_page === 1"                
                   class="disabled:pointer-events-none disabled:opacity-45 flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   <svg
@@ -32,7 +32,7 @@
                 </button>
               </li>
               <li v-for="(link, index) in innerLinks" :key="index">
-                <template v-if="paginatedItems.current_page == link.label">
+                <template v-if="paginatedItems.meta.current_page === Number.parseInt(link.label)">
                   <span
                     class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 opacity-45"
                   >{{ link.label }}</span>
@@ -51,7 +51,7 @@
                 <button
                   type="button"
                   @click="nextPage"
-                  :disabled="paginationData.current_page === paginationData.last_page"                
+                  :disabled="paginationData.meta.current_page === paginationData.meta.last_page"                
                   class="disabled:pointer-events-none disabled:opacity-45 flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   <svg
@@ -77,18 +77,20 @@
     </template>  
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { cloneDeep } from 'lodash'
+import { PaginatedResponse } from '@/types/pagination';
 
-const props = defineProps({
-  paginatedItems: Object,
-})
+type Props<T> = {
+  paginatedItems: PaginatedResponse<T>;
+};
+const props = defineProps<Props<any>>();
 
 const emit = defineEmits(['change'])
 const innerLinks = computed(() => {
-  if (props.paginatedItems.links && props.paginatedItems.links.length > 2) {
-    const tmpLinks = cloneDeep(props.paginatedItems.links)
+  if (props.paginatedItems.links && props.paginatedItems.meta.links.length > 2) {
+    const tmpLinks = cloneDeep(props.paginatedItems.meta.links)
     tmpLinks.shift()
     tmpLinks.pop()
     return tmpLinks
@@ -100,14 +102,14 @@ const innerLinks = computed(() => {
 const paginationData = computed(() => props.paginatedItems ?? { total: 0 })
 
 const prevPage = () => {
-  emit('change', props.paginatedItems.prev_page_url)
+  emit('change', props.paginatedItems.links.prev)
 }
 
 const nextPage = () => {
-  emit('change', props.paginatedItems.next_page_url)
+  emit('change', props.paginatedItems.links.next)
 }
 
-const goToPage = (page) => {
+const goToPage = (page: string | null) => {
   emit('change', page)
 }
 </script>

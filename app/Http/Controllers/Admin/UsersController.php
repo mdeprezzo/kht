@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserRequest;
+use App\Http\Resources\Users\UserCollection;
 
 class UsersController extends Controller
 {
@@ -22,7 +23,7 @@ class UsersController extends Controller
         return Inertia::render(
             component: 'Admin/Users/Index',
             props: [
-                'users' => $users,
+                'users' => new UserCollection($users),
                 'roles' => RolesEnum::cases()
             ]
         );

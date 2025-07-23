@@ -24,7 +24,7 @@
                         <template v-for="book in books.data" :key="book.id">
                             <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                                 <div>
-                                    <img class="rounded-t-lg h-80 w-full object-cover" :src="book.media[0].original_url" :alt="book.title" />
+                                    <img class="rounded-t-lg h-80 w-full object-cover" :src="book.cover" :alt="book.title" />
                                 </div>
                                 <div class="p-5 space-y-4">
                                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ book.title }}</h5>
@@ -37,8 +37,8 @@
                                     >Scopri di più</Link>
 
                                     <SecondaryButton @click="removeTofavorites(book)" :disabled="form.processing" class="w-full justify-center space-x-2">
-                                    <HearthIcon />
-                                    <span>Rimuovi dai preferiti</span>
+                                        <HearthIcon />
+                                        <span>Rimuovi dai preferiti</span>
                                     </SecondaryButton>                              
                                 </div>
                             </div>                        
@@ -62,6 +62,8 @@
 import { Head, Link, usePage, router, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { useSearch } from '@/composables/useSearch'
+import { PaginatedResponse } from '@/types/pagination.d';
+import { Book } from '@/types/book.d';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -69,17 +71,21 @@ import HearthIcon from '@/Components/Icons/HearthIcon.vue';
 import Pagination from '@/Components/Pagination.vue';
 import TextInput from '@/Components/TextInput.vue';
 
+
 // search
 const { searchQuery } = useSearch()
 
-const books = computed(() => usePage().props.books);
+const books = computed<PaginatedResponse<Book>>(
+    () => usePage().props.books as PaginatedResponse<Book>
+);
+
 const form = useForm({})
 
-const changePage = (url) => {
+const changePage = (url: string) => {
     router.visit(url)
 }
 
-const removeTofavorites = (book) => {
+const removeTofavorites = (book: Book) => {
   form.delete(
     route('favorites.destroy', { book: book.id }),
     {
