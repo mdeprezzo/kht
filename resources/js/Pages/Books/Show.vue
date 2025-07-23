@@ -15,7 +15,7 @@
                 <div class="grid md:grid-cols-3 grid-cols-1 gap-4">
                     <div class="space-y-4">
                         <img class="rounded-t-lg h-80 w-full object-cover shadow-sm sm:rounded-lg" :src="book.media[0].original_url" :alt="book.title" />
-                        <template v-if="$page.props.auth.user">
+                        <template v-if="$page.props.auth.user && can.toggle_favorites">
                             <SecondaryButton @click="toggleFavorite" class="w-full justify-center space-x-2" :disabled="form.processing">
                                 <component :is="favoriteIcon" />
                                 <span v-if="!isInFavoritesList">Aggiungi ai preferiti</span>
@@ -50,6 +50,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import HearthOutlineIcon from '@/Components/Icons/HearthOutlineIcon.vue';
 import HearthIcon from '@/Components/Icons/HearthIcon.vue';
 
+const can = computed(() => usePage().props.can);
 const book = computed(() => usePage().props.book);
 const isInFavoritesList = computed(() => usePage().props.isInFavoritesList)
 const favoriteIcon = computed(() => {

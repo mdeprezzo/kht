@@ -20,14 +20,14 @@ class DatabaseSeeder extends Seeder
 
         foreach ($permissions as $role => $permissionsList) {
             foreach ($permissionsList as $permission) {
-                Permission::create(['name' => $permission]);
+                Permission::firstOrCreate(['name' => $permission]);
             }
         }
 
         foreach (RolesEnum::cases() as $case) {
-            $role = Role::create(['name' => $case->value]);
+            $role = Role::firstOrCreate(['name' => $case->value]);
 
-            foreach ($permissions[$role] as $permission) {
+            foreach ($permissions[$case->value] as $permission) {
                 $role->givePermissionTo($permission);
             }
         }

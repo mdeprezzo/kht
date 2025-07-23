@@ -13,8 +13,7 @@ enum RolesEnum: string
             self::ADMIN->value => [],
             self::USER->value => [
                 'see_favorites',
-                'add_favorites',
-                'remove_favorites'
+                'toggle_favorites',
             ]
         ];
     }

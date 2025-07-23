@@ -39,8 +39,9 @@ class HandleInertiaRequests extends Middleware
             ],
             'isAdmin' => $user?->hasRole(RolesEnum::ADMIN->value) ?? false,
             'can' => [
-                'see_favorites' => $user?->can('see_favorites') ?? false
-            ]
+                'see_favorites' => $user?->can('see_favorites') ?? false,
+                'toggle_favorites' => $user?->can('toggle_favorites') ?? false,
+            ] 
         ];
     }
 }

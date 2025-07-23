@@ -32,7 +32,7 @@
         </button> 
       </div>
 
-      <template v-if="form.role != 'admin'">
+      <template v-if="form.role != '' && form.role != 'admin' && form.id">
         <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
           <li class="me-2">
             <button 
@@ -217,11 +217,14 @@ function close() {
   show.value = false
   currentTab.value = 'data'
   form.reset()
+  books.value.data = []
+
   emit('close')
 }
 
-const changePage = (page) => {
-  //
+const changePage = async (page) => {
+  const response = await axios.get(page)
+  books.value = response.data.books
 }
 
 async function open(item = null) {
