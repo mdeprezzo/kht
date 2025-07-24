@@ -131,7 +131,7 @@ function close() {
 async function open(item = null) {
   if (item) {
     const response = await axios.get(route('api.books.show', { book: item.id }))
-    book.value = response.data.data
+    book.value = response.data
 
     form.id = item.id
     form.title = item.title
