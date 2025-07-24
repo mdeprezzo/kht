@@ -34,7 +34,7 @@ class BookRequest extends FormRequest
                 ...$rules
             ],
             default => [
-                'title' => Rule::unique('books')->ignore($this->route('book')->id),
+                'title' => ['required', Rule::unique('books')->ignore($this->route('book')->id)],
                 ...$rules
             ]
         };

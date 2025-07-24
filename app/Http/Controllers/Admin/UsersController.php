@@ -45,7 +45,13 @@ class UsersController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
-        $user->update($request->validated());
+        $validated = $request->validated();
+        $password = Arr::get($validated, 'password', null);
+        if (!$password) {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
         $user->syncRoles(Arr::wrap($request->get('role')));
 
         return back();

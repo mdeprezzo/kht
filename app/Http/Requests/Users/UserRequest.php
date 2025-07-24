@@ -23,11 +23,22 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed',
-            'role' => ['required', Rule::enum(RolesEnum::class)],
-        ]; 
+            'role' => ['required', Rule::enum(RolesEnum::class)],            
+        ];
+
+        return match ($this->method() === 'POST') {
+            true => [
+                ...$rules,
+                'password' => 'required|confirmed',
+                'email' => 'required|email|unique:users,email',
+            ],
+            default => [
+                'password' => 'nullable|confirmed',
+                'email' => ['required', 'email', Rule::unique('users')->ignore($this->route('user')->id)],
+                ...$rules
+            ]
+        };        
     }
 }
