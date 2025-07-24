@@ -124,6 +124,7 @@ const form = useForm({
 
 function close() {
   show.value = false
+  book.value = null
   form.reset()
   emit('close')
 }
