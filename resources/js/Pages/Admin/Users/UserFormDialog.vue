@@ -237,7 +237,7 @@ async function open(item = null) {
     form.email = response.data.user.email
     form.role = response.data.user.roles[0].name
 
-    books.value = response.data.books
+    books.value = response.data.books ?? {data: []}
   }
 
   show.value = !show.value

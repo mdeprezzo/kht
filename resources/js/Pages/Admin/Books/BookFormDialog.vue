@@ -76,7 +76,7 @@
 
           <div>
             <InputLabel for="cover" value="Cover" />
-            <FileInput @selected="setSelectedFile" />
+            <FileInput acceptMimes="image/*" @selected="setSelectedFile" />
           </div>
         </div>
       </form>

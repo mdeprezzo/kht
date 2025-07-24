@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Books;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BookRequest extends FormRequest
@@ -20,11 +21,23 @@ class BookRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        return [
-            'title' => 'required',
+    {   
+        $rules = [
             'description' => 'required',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
+            'cover' => 'nullable|image'
         ];
+
+        return match ($this->method() === 'POST') {
+            true => [
+                'title' => 'required|unique:books',
+                ...$rules
+            ],
+            default => [
+                'title' => Rule::unique('books')->ignore($this->route('book')->id),
+                ...$rules
+            ]
+        };
+
     }
 }

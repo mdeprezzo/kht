@@ -59,7 +59,7 @@
     </div>
 
     <!-- Pagination -->
-    <template v-if="paginationData?.meta.total > props.paginatedItems.meta.per_page">
+    <template v-if="paginationData?.meta?.total > props.paginatedItems?.meta?.per_page">
       <div class="px-6 py-4 border-t border-white/[0.05]">
         <div class="flex items-center justify-between">
           <span class="block text-sm font-medium text-gray-400">
@@ -92,7 +92,16 @@ const props = withDefaults(
     actions?: boolean;
   }>(),
   {
-    actions: true, // ✅ Default value
+    actions: true, // ✅ Default value,
+    items: [],
+    paginatedItems: {
+      data: [],
+      meta: {
+        total: 0,
+        per_page: 20,
+        links: []
+      }
+    }
   }
 );
 
@@ -110,7 +119,16 @@ const innerLinks = computed(() => {
 
 const mappedItems = computed(() => props.paginatedItems?.data ?? props.items)
 
-const paginationData = computed(() => props.paginatedItems ?? { total: 0 })
+const paginationData = computed(
+  () => props.paginatedItems ?? {
+      data: [],
+      meta: {
+        total: 0,
+        per_page: 20,
+        links: []
+      }
+    }
+)
 
 const goToPage = (page: string) => {
   emit('change', page)
