@@ -88,26 +88,17 @@ const props = withDefaults(
     headers: any[];
     paginatedItems: PaginatedResponse<any>;
     items?: any[];
-    title?: string;
+    title?: string | null;
     actions?: boolean;
   }>(),
   {
-    actions: true, // ✅ Default value,
-    items: [],
-    paginatedItems: {
-      data: [],
-      meta: {
-        total: 0,
-        per_page: 20,
-        links: []
-      }
-    }
+    actions: true,
   }
 );
 
 const emit = defineEmits(['change'])
 const innerLinks = computed(() => {
-  if (props.paginatedItems.links && props.paginatedItems.meta.links.length > 2) {
+  if (props.paginatedItems.links && props.paginatedItems?.meta?.links?.length > 2) {
     const tmpLinks = cloneDeep(props.paginatedItems.meta.links)
     tmpLinks.shift()
     tmpLinks.pop()
