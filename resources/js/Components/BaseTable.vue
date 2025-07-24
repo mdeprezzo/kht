@@ -27,7 +27,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
-            <template v-if="mappedItems.length > 0">
+            <template v-if="mappedItems?.length > 0">
               <tr v-for="item in mappedItems" :key="item.id">
                 <td 
                   :key="`td-${header.key}`"
