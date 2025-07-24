@@ -34,7 +34,13 @@ class UsersController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $user = User::create($request->validated());
+        $validated = $request->validated();
+
+        $user = User::create($validated);
+        $user->update([
+            'password' => bcrypt($validated['password']),
+        ]);
+
         $user->assignRole($request->get('role'));
 
         return redirect()->route('admin.users.index');
@@ -48,6 +54,12 @@ class UsersController extends Controller
         $validated = $request->validated();
         $password = Arr::get($validated, 'password', null);
         if (!$password) {
+            unset($validated['password']);
+        } else {
+            $user->update([
+                'password' => bcrypt($validated['password']),
+            ]);   
+            
             unset($validated['password']);
         }
 
